@@ -33,7 +33,7 @@ import (
 	"github.com/test-network-function/test-network-function/test-network-function/results"
 
 	"github.com/onsi/ginkgo"
-	ginkgoconfig "github.com/onsi/ginkgo/config"
+	//ginkgoconfig "github.com/onsi/ginkgo/config"
 	"github.com/onsi/gomega"
 	log "github.com/sirupsen/logrus"
 	"github.com/test-network-function/test-network-function/pkg/config"
@@ -67,7 +67,7 @@ import (
 	"github.com/test-network-function/test-network-function/pkg/tnf/handlers/sysctlallconfigsargs"
 	"github.com/test-network-function/test-network-function/pkg/tnf/interactive"
 	"github.com/test-network-function/test-network-function/pkg/tnf/reel"
-	"github.com/test-network-function/test-network-function/pkg/tnf/testcases"
+	//"github.com/test-network-function/test-network-function/pkg/tnf/testcases"
 	utils "github.com/test-network-function/test-network-function/pkg/utils"
 )
 
@@ -185,7 +185,7 @@ func createPartnerContainers(conf *configsections.TestConfiguration) map[configs
 
 // Runs the "generic" CNF test cases.
 var _ = ginkgo.Describe(testsKey, func() {
-	if testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, testsKey) {
+//	if testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, testsKey) {
 		config := GetTestConfiguration()
 		log.Infof("Test Configuration: %s", config)
 
@@ -271,7 +271,7 @@ var _ = ginkgo.Describe(testsKey, func() {
 				testSysctlConfigs(getContext(), containersUnderTest.oc.GetPodName(), containersUnderTest.oc.GetPodNamespace())
 			}
 		}
-	}
+	//}
 })
 
 // testIsRedHatRelease tests whether the container attached to oc is Red Hat based.
@@ -293,7 +293,7 @@ func testIsRedHatRelease(oc *interactive.Oc) {
 // TODO: Multus is not applicable to every CNF, so in some regards it is CNF-specific.  On the other hand, it is likely
 // a useful test across most CNFs.  Should "multus" be considered generic, cnf_specific, or somewhere in between.
 var _ = ginkgo.Describe(multusTestsKey, func() {
-	if testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, multusTestsKey) {
+//	if testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, multusTestsKey) {
 		config := GetTestConfiguration()
 		log.Infof("Test Configuration: %s", config)
 
@@ -309,7 +309,7 @@ var _ = ginkgo.Describe(multusTestsKey, func() {
 				}
 			}
 		})
-	}
+	//}
 })
 
 // Helper to test that the PUT didn't install new packages after starting, and report through Ginkgo.
