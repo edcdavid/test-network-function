@@ -36,7 +36,8 @@ var (
 func BuildCNFsConfig() (cnfs []configsections.Cnf) {
 	pods, err := GetPodsByLabel(configsections.Label{Namespace: tnfNamespace, Name: cnfLabelName, Value: anyLabelValue})
 	if err != nil {
-		log.Fatalf("found no CNFs to test while 'container' spec enabled: %s", err)
+		log.Info("found no CNFs to test while 'container' spec enabled: %s", err)
+		return cnfs
 	}
 	for i := range pods.Items {
 		cnfs = append(cnfs, BuildCnfFromPodResource(&pods.Items[i]))

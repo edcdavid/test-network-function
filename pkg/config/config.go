@@ -21,11 +21,12 @@ import (
 	"io/ioutil"
 	"os"
 
-	ginkgoconfig "github.com/onsi/ginkgo/config"
+	//ginkgoconfig "github.com/onsi/ginkgo/config"
 	log "github.com/sirupsen/logrus"
 	"github.com/test-network-function/test-network-function/pkg/config/autodiscover"
 	"github.com/test-network-function/test-network-function/pkg/config/configsections"
-	"github.com/test-network-function/test-network-function/pkg/tnf/testcases"
+
+	//"github.com/test-network-function/test-network-function/pkg/tnf/testcases"
 	"gopkg.in/yaml.v2"
 )
 
@@ -106,15 +107,15 @@ func loadConfigFromFile(filePath string) error {
 // doAutodiscovery will autodiscover config for any enabled test spec. Specs which are not selected will be skipped to
 // avoid unnecessary noise in the logs.
 func doAutodiscovery() {
-	if genericTestConfigRequired() {
-		configInstance.Generic = autodiscover.BuildGenericConfig()
-	}
-	if podTestConfigRequired() {
-		configInstance.CNFs = autodiscover.BuildCNFsConfig()
-	}
-	if testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, operatorTestSpecName) {
-		configInstance.Operators = autodiscover.BuildOperatorConfig()
-	}
+	//if genericTestConfigRequired() {
+	configInstance.Generic = autodiscover.BuildGenericConfig()
+	//}
+	//if podTestConfigRequired() {
+	configInstance.CNFs = autodiscover.BuildCNFsConfig()
+	//}
+	//if testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, operatorTestSpecName) {
+	configInstance.Operators = autodiscover.BuildOperatorConfig()
+	//}
 }
 
 // GetConfigInstance provides access to the singleton ConfigFile instance.
@@ -177,13 +178,11 @@ func BuildConfig() {
 }
 
 func genericTestConfigRequired() bool {
-	return testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, genericTestSpecName) ||
-		testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, diagnosticTestSpecName) ||
-		testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, multusTestSpecName)
+	return !configInstance.Generic.Invalid
 }
 
 func podTestConfigRequired() bool {
-	return testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, containerTestSpecName)
+	return configInstance.CNFs != nil
 }
 
 // SetNeedsRefresh marks the config stale so that the next getInstance call will redo discovery

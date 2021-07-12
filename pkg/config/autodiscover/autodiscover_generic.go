@@ -40,7 +40,9 @@ func BuildGenericConfig() (conf configsections.TestConfiguration) {
 	// an orchestrator must be identified
 	orchestrator, err := getContainerByLabel(configsections.Label{Namespace: tnfNamespace, Name: genericLabelName, Value: orchestratorValue})
 	if err != nil {
-		log.Fatalf("failed to identify a single test orchestrator container: %s", err)
+		log.Info("failed to identify a single test orchestrator container: %s", err)
+		conf.Invalid=true
+		return conf
 	}
 	partnerContainers = append(partnerContainers, orchestrator)
 	conf.TestOrchestrator = orchestrator.ContainerIdentifier
@@ -48,7 +50,9 @@ func BuildGenericConfig() (conf configsections.TestConfiguration) {
 	// there must be containers to test
 	containersUnderTest, err := GetContainersByLabel(configsections.Label{Namespace: tnfNamespace, Name: genericLabelName, Value: underTestValue})
 	if err != nil {
-		log.Fatalf("found no containers to test: %s", err)
+		log.Info("found no containers to test: %s", err)
+		conf.Invalid=true
+		return conf
 	}
 	conf.ContainersUnderTest = containersUnderTest
 

@@ -34,6 +34,7 @@ type Container struct {
 
 // TestConfiguration provides generic test related configuration
 type TestConfiguration struct {
+	Invalid bool
 	ContainersUnderTest   []Container         `yaml:"containersUnderTest" json:"containersUnderTest"`
 	PartnerContainers     []Container         `yaml:"partnerContainers" json:"partnerContainers"`
 	TestOrchestrator      ContainerIdentifier `yaml:"testOrchestrator" json:"testOrchestrator"`

@@ -26,7 +26,7 @@ import (
 	"github.com/test-network-function/test-network-function/test-network-function/results"
 
 	"github.com/onsi/ginkgo"
-	//ginkgoconfig "github.com/onsi/ginkgo/config"
+//	ginkgoconfig "github.com/onsi/ginkgo/config"
 	"github.com/onsi/gomega"
 	"github.com/test-network-function/test-network-function/internal/api"
 	"github.com/test-network-function/test-network-function/pkg/config"
@@ -58,6 +58,7 @@ var (
 )
 
 var _ = ginkgo.Describe(testSpecName, func() {
+	
 	//if testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, testSpecName) {
 		defer ginkgo.GinkgoRecover()
 		ginkgo.When("a local shell is spawned", func() {

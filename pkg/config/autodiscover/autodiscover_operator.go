@@ -36,7 +36,8 @@ var (
 func BuildOperatorConfig() (operatorsToTest []configsections.Operator) {
 	csvs, err := GetCSVsByLabel(operatorLabelName, anyLabelValue)
 	if err != nil {
-		log.Fatalf("found no CSVs to test while 'operator' spec enabled: %s", err)
+		log.Info("found no CSVs to test while 'operator' spec enabled: %s", err)
+		return operatorsToTest
 	}
 	for i := range csvs.Items {
 		operatorsToTest = append(operatorsToTest, BuildOperatorFromCSVResource(&csvs.Items[i]))
