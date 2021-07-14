@@ -2,7 +2,7 @@ name: Test Incoming Changes
 
 on:
   push:
-    branches: [ main ]
+    branches: [ catalog_update ]
   pull_request:
     branches: [ main ]
   workflow_dispatch:
