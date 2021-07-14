@@ -183,12 +183,12 @@ jobs:
         run: go get -u github.com/onsi/ginkgo/ginkgo
 
       - name: Create catalog .md file
-        id: commit
+        id: catalog-md
         run: |   
           make build-catalog-md
 
       - name: Create catalog .json file
-        id: commit
+        id: catalog-json
         run: |   
           make build-catalog-json
 
