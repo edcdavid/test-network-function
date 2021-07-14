@@ -161,7 +161,7 @@ jobs:
         if: ${{ github.ref == 'refs/heads/main' && github.repository_owner == 'test-network-function' }}
         run: docker push --all-tags ${REGISTRY}/${IMAGE_NAME}
 
-  update catalog:
+  update-catalog:
     name: Update catalog
     runs-on: ubuntu-20.04
     env:
