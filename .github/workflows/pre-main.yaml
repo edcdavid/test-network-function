@@ -4,7 +4,7 @@ on:
   push:
     branches: [ catalogupdate ]
   pull_request:
-    branches: [ main ]
+    branches: [ catalogupdate ]
   workflow_dispatch:
 env:
   REGISTRY: quay.io
