@@ -163,6 +163,7 @@ jobs:
 
   update-catalog:
     name: Update catalog
+    needs: [lint, unit-tests, smoke-tests]
     runs-on: ubuntu-20.04
     env:
       SHELL: /bin/bash
