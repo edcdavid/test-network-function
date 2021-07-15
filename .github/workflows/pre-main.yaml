@@ -2,9 +2,9 @@ name: Test Incoming Changes
 
 on:
   push:
-    branches: [ catalogupdate ]
+    branches: [ catalogupdate2 ]
   pull_request:
-    branches: [ catalogupdate ]
+    branches: [ catalogupdate2 ]
   workflow_dispatch:
 env:
   REGISTRY: quay.io
