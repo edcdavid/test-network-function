@@ -9,7 +9,7 @@ on:
 env:
   REGISTRY: quay.io
   REGISTRY_LOCAL: localhost
-  IMAGE_NAME: testnetworkfunction/test-network-function
+  IMAGE_NAME: edcdavid/test-network-function
   IMAGE_TAG: unstable
   TNF_CONTAINER_CLIENT: docker
   TNF_MINIKUBE_ONLY: true
