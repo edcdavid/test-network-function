@@ -41,6 +41,7 @@ import (
 	"github.com/test-network-function/test-network-function/pkg/tnf/handlers/nodeselector"
 	"github.com/test-network-function/test-network-function/pkg/tnf/handlers/owners"
 	"github.com/test-network-function/test-network-function/pkg/tnf/reel"
+	configpkg "github.com/test-network-function/test-network-function/pkg/config"
 )
 
 const (
@@ -91,19 +92,34 @@ var _ = ginkgo.Describe(common.LifecycleTestKey, func() {
 	})
 	if testcases.IsInFocus(ginkgoconfig.GinkgoConfig.FocusStrings, common.LifecycleTestKey) {
 
-		testNodeSelector(&configData)
+		conf := configpkg.GetConfigInstance()
 
-		testGracePeriod(&configData)
+		log.Info(conf.CNFs )
 
-		testShutdown(&configData)
-
-		testPodAntiAffinity(&configData)
-
-		if !common.NonIntrusive() {
-			testPodsRecreation(&configData)
+		for _, podUnderTest := range conf.CNFs {
+			testNodeSelector(common.GetContext(), podUnderTest.Name, podUnderTest.Namespace)
 		}
 
-		testOwner(&configData)
+		for _, podUnderTest := range conf.CNFs  {
+			testGracePeriod(common.GetContext(), podUnderTest.Name, podUnderTest.Namespace)
+		}
+
+		for _, podUnderTest := range conf.CNFs  {
+			testShutdown(podUnderTest.Namespace, podUnderTest.Name)
+		}
+
+		for _, podUnderTest := range conf.CNFs  {
+			testDeployments(podUnderTest.Namespace)
+		}
+
+		for _, podUnderTest := range conf.CNFs  {
+			testOwner(podUnderTest.Namespace, podUnderTest.Name)
+		}
+
+		for _, podUnderTest := range conf.CNFs  {
+			testPodAntiAffinity(podUnderTest.Namespace)
+
+		}
 	}
 })
 
