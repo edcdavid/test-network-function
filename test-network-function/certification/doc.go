@@ -15,6 +15,7 @@
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 /*
-Package container provides Ginkgo tests used to validate container CNF facets.
+Package certification contains tests that retrieve results from other
+affiliated certification project through an API query, e.g. CVP and OVP
 */
-package container
+package certification

@@ -13,6 +13,7 @@ env:
   IMAGE_TAG: unstable
   TNF_CONTAINER_CLIENT: docker
   TNF_MINIKUBE_ONLY: true
+  TNF_NON_INTRUSIVE_ONLY: true
   TNF_DISABLE_CONFIG_AUTODISCOVER: false
   TNF_CONFIG_DIR: /tmp/tnf/config
   TNF_OUTPUT_DIR: /tmp/tnf/output
@@ -118,8 +119,8 @@ jobs:
       - name: 'Test: Run diagnostic test suite'
         run: ./run-cnf-suites.sh diagnostic
 
-      - name: 'Test: Run generic test suite'
-        run: ./run-cnf-suites.sh generic
+      - name: 'Test: Run test suites'
+        run: ./run-cnf-suites.sh access-control lifecycle platform observablility networking
 
       # Perform smoke tests using a TNF container.
 
@@ -143,7 +144,7 @@ jobs:
         run: ./run-tnf-container.sh ${{ env.TESTING_CMD_PARAMS }} diagnostic
 
       - name: 'Test: Run generic test suite in a TNF container'
-        run: ./run-tnf-container.sh ${{ env.TESTING_CMD_PARAMS }} generic
+        run: ./run-tnf-container.sh ${{ env.TESTING_CMD_PARAMS }} generic access-control
 
       # Push the new unstable TNF image to Quay.io.
 

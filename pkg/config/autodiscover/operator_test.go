@@ -14,18 +14,17 @@
 // with this program; if not, write to the Free Software Foundation, Inc.,
 // 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
-package autodiscover_test
+package autodiscover
 
 import (
 	"testing"
 
 	"github.com/stretchr/testify/assert"
-	"github.com/test-network-function/test-network-function/pkg/config/autodiscover"
 )
 
 func TestBuildOperatorFromCSVResource(t *testing.T) {
 	csvResource := loadCSVResource(csvFilePath)
-	operator := autodiscover.BuildOperatorFromCSVResource(&csvResource)
+	operator := buildOperatorFromCSVResource(&csvResource)
 
 	assert.Equal(t, "CSVNamespace", operator.Namespace)
 	assert.Equal(t, "CSVName", operator.Name)

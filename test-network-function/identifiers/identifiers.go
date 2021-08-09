@@ -1,4 +1,5 @@
 // Copyright (C) 2021 Red Hat, Inc.
+// Copyright (C) 2021 Red Hat, Inc.
 //
 // This program is free software; you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -20,15 +21,12 @@ import (
 	"fmt"
 
 	"github.com/test-network-function/test-network-function-claim/pkg/claim"
+	"github.com/test-network-function/test-network-function/test-network-function/common"
 )
 
 const (
-	containerSuite    = "container"
-	diagnosticSuite   = "diagnostic"
-	genericSuite      = "generic"
 	informativeResult = "informative"
 	normativeResult   = "normative"
-	operatorSuite     = "operator"
 	url               = "http://test-network-function.com/testcases"
 	versionOne        = "v1.0.0"
 )
@@ -52,125 +50,133 @@ func formTestURL(suite, name string) string {
 	return fmt.Sprintf("%s/%s/%s", url, suite, name)
 }
 
-func formGenericTestURL(name string) string {
-	return formTestURL(genericSuite, name)
-}
-
 var (
-	// TestContainerBestPracticesIdentifier tests container best practices.
-	TestContainerBestPracticesIdentifier = claim.Identifier{
-		Url:     formTestURL(containerSuite, "container-best-practices"),
+	// TestHostResourceIdentifier tests container best practices.
+	TestHostResourceIdentifier = claim.Identifier{
+		Url:     formTestURL(common.AccessControlTestKey, "host-resource"),
 		Version: versionOne,
 	}
 	// TestContainerIsCertifiedIdentifier tests whether the container has passed Container Certification.
 	TestContainerIsCertifiedIdentifier = claim.Identifier{
-		Url:     formTestURL(containerSuite, "container-is-certified"),
+		Url:     formTestURL(common.AffiliatedCertTestKey, "container-is-certified"),
 		Version: versionOne,
 	}
 	// TestExtractNodeInformationIdentifier is a test which extracts Node information.
 	TestExtractNodeInformationIdentifier = claim.Identifier{
-		Url:     formTestURL(diagnosticSuite, "extract-node-information"),
+		Url:     formTestURL(common.DiagnosticTestKey, "extract-node-information"),
+		Version: versionOne,
+	}
+	// TestListCniPluginsIdentifier retrieves list of CNI plugins.
+	TestListCniPluginsIdentifier = claim.Identifier{
+		Url:     formTestURL(common.DiagnosticTestKey, "list-cni-plugins"),
+		Version: versionOne,
+	}
+	// TestNodesHwInfoIdentifier retrieves nodes HW info.
+	TestNodesHwInfoIdentifier = claim.Identifier{
+		Url:     formTestURL(common.DiagnosticTestKey, "nodes-hw-info"),
 		Version: versionOne,
 	}
 	// TestHugepagesNotManuallyManipulated represents the test identifier testing hugepages have not been manipulated.
 	TestHugepagesNotManuallyManipulated = claim.Identifier{
-		Url:     formGenericTestURL("hugepages-not-manually-manipulated"),
+		Url:     formTestURL(common.PlatformAlterationTestKey, "hugepages-config"),
 		Version: versionOne,
 	}
 	// TestICMPv4ConnectivityIdentifier tests icmpv4 connectivity.
 	TestICMPv4ConnectivityIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("icmpv4-connectivity"),
+		Url:     formTestURL(common.NetworkingTestKey, "icmpv4-connectivity"),
 		Version: versionOne,
 	}
 	// TestNamespaceBestPracticesIdentifier ensures the namespace has followed best namespace practices.
 	TestNamespaceBestPracticesIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("namespace-best-practices"),
+		Url:     formTestURL(common.AccessControlTestKey, "namespace"),
 		Version: versionOne,
 	}
 	// TestNonDefaultGracePeriodIdentifier tests best grace period practices.
 	TestNonDefaultGracePeriodIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("non-default-grace-period"),
+		Url:     formTestURL(common.LifecycleTestKey, "pod-termination-grace-period"),
 		Version: versionOne,
 	}
 	// TestNonTaintedNodeKernelsIdentifier is the identifier for the test checking tainted nodes.
 	TestNonTaintedNodeKernelsIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("non-tainted-node-kernel"),
+		Url:     formTestURL(common.PlatformAlterationTestKey, "tainted-node-kernel"),
 		Version: versionOne,
 	}
-	// TestOperatorBestPracticesIdentifier tests Operator best practices.
-	TestOperatorBestPracticesIdentifier = claim.Identifier{
-		Url:     formTestURL(operatorSuite, "operator-best-practices"),
+	// TestOperatorInstallStatusIdentifier tests Operator best practices.
+	TestOperatorInstallStatusIdentifier = claim.Identifier{
+		Url:     formTestURL(common.OperatorTestKey, "install-status"),
 		Version: versionOne,
 	}
 	// TestOperatorIsCertifiedIdentifier tests that an Operator has passed Operator certification.
 	TestOperatorIsCertifiedIdentifier = claim.Identifier{
-		Url:     formTestURL(operatorSuite, "operator-is-certified"),
+		Url:     formTestURL(common.AffiliatedCertTestKey, "operator-is-certified"),
 		Version: versionOne,
 	}
 	// TestOperatorIsInstalledViaOLMIdentifier tests that an Operator is installed via OLM.
 	TestOperatorIsInstalledViaOLMIdentifier = claim.Identifier{
-		Url:     formTestURL(operatorSuite, "operator-is-installed-via-olm"),
+		Url:     formTestURL(common.OperatorTestKey, "install-source"),
 		Version: versionOne,
 	}
 	// TestPodNodeSelectorAndAffinityBestPractices is the test ensuring nodeSelector and nodeAffinity are not used by a
 	// Pod.
 	TestPodNodeSelectorAndAffinityBestPractices = claim.Identifier{
-		Url:     formGenericTestURL("pod-node-selector-node-affinity-best-practices"),
+		Url:     formTestURL(common.LifecycleTestKey, "pod-scheduling"),
 		Version: versionOne,
 	}
+	// TestPodHighAvailabilityBestPractices is the test ensuring podAntiAffinity are used by a
+	// Pod when pod replica # are great than 1
+	TestPodHighAvailabilityBestPractices = claim.Identifier{
+		Url:     formTestURL(common.LifecycleTestKey, "pod-high-availability"),
+		Version: versionOne,
+	}
+
 	// TestPodClusterRoleBindingsBestPracticesIdentifier ensures Pod crb best practices.
 	TestPodClusterRoleBindingsBestPracticesIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("pod-cluster-role-bindings-best-practices"),
+		Url:     formTestURL(common.AccessControlTestKey, "cluster-role-bindings"),
 		Version: versionOne,
 	}
 	// TestPodDeploymentBestPracticesIdentifier ensures a CNF follows best Deployment practices.
 	TestPodDeploymentBestPracticesIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("pod-deployment-best-practices"),
+		Url:     formTestURL(common.LifecycleTestKey, "pod-owner-type"),
 		Version: versionOne,
 	}
 	// TestPodRecreationIdentifier ensures recreation best practices.
 	TestPodRecreationIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("pod-recreation"),
+		Url:     formTestURL(common.LifecycleTestKey, "pod-recreation"),
 		Version: versionOne,
 	}
 	// TestPodRoleBindingsBestPracticesIdentifier represents rb best practices.
 	TestPodRoleBindingsBestPracticesIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("pod-role-bindings-best-practices"),
+		Url:     formTestURL(common.AccessControlTestKey, "pod-role-bindings"),
 		Version: versionOne,
 	}
 	// TestPodServiceAccountBestPracticesIdentifier tests Pod SA best practices.
 	TestPodServiceAccountBestPracticesIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("pod-service-account-best-practices"),
+		Url:     formTestURL(common.AccessControlTestKey, "pod-service-account"),
 		Version: versionOne,
 	}
 	// TestServicesDoNotUseNodeportsIdentifier ensures Services don't utilize NodePorts.
 	TestServicesDoNotUseNodeportsIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("services-do-not-use-nodeports"),
+		Url:     formTestURL(common.NetworkingTestKey, "service-type"),
 		Version: versionOne,
 	}
 	// TestUnalteredBaseImageIdentifier ensures the base image is not altered.
 	TestUnalteredBaseImageIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("unaltered-base-image"),
+		Url:     formTestURL(common.PlatformAlterationTestKey, "base-image"),
 		Version: versionOne,
 	}
 	// TestUnalteredStartupBootParamsIdentifier ensures startup boot params are not altered.
 	TestUnalteredStartupBootParamsIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("unaltered-startup-boot-params"),
-		Version: versionOne,
-	}
-	// TestListCniPluginsIdentifier retrieves list of CNI plugins.
-	TestListCniPluginsIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("list-cni-plugins"),
-		Version: versionOne,
-	}
-	// TestNodesHwInfoIdentifier retrieves nodes HW info.
-	TestNodesHwInfoIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("nodes-hw-info"),
+		Url:     formTestURL(common.PlatformAlterationTestKey, "boot-params"),
 		Version: versionOne,
 	}
 	// TestLoggingIdentifier ensures stderr/stdout are used
 	TestLoggingIdentifier = claim.Identifier{
-		Url:     formGenericTestURL("pod-stderr-stdout-best-practices"),
+		Url:     formTestURL(common.ObservabilityTestKey, "container-logging"),
+		Version: versionOne,
+	}
+	// TestShudtownIdentifier ensures pre-stop lifecycle is defined
+	TestShudtownIdentifier = claim.Identifier{
+		Url:     formTestURL(common.LifecycleTestKey, "container-shutdown"),
 		Version: versionOne,
 	}
 )
@@ -182,14 +188,14 @@ func formDescription(identifier claim.Identifier, description string) string {
 // Catalog is the JUnit testcase catalog of tests.
 var Catalog = map[claim.Identifier]TestCaseDescription{
 
-	TestContainerBestPracticesIdentifier: {
-		Identifier: TestContainerBestPracticesIdentifier,
+	TestHostResourceIdentifier: {
+		Identifier: TestHostResourceIdentifier,
 		Type:       normativeResult,
 		Remediation: `Ensure that each Pod in the CNF abides by the suggested best practices listed in the test description.  In some rare
 cases, not all best practices can be followed.  For example, some CNFs may be required to run as root.  Such exceptions
 should be handled on a case-by-case basis, and should provide a proper justification as to why the best practice(s)
 cannot be followed.`,
-		Description: formDescription(TestContainerBestPracticesIdentifier,
+		Description: formDescription(TestHostResourceIdentifier,
 			`tests several aspects of CNF best practices, including:
 1. The Pod does not have access to Host Node Networking.
 2. The Pod does not have access to Host Node Ports.
@@ -283,14 +289,14 @@ to support Highly Available CNFs, since when a CNF is re-instantiated on a backu
 the same hacks.'`),
 	},
 
-	TestOperatorBestPracticesIdentifier: {
-		Identifier:  TestOperatorBestPracticesIdentifier,
+	TestOperatorInstallStatusIdentifier: {
+		Identifier:  TestOperatorInstallStatusIdentifier,
 		Type:        normativeResult,
 		Remediation: `Ensure that your Operator abides by the Operator Best Practices mentioned in the description.`,
-		Description: formDescription(TestOperatorBestPracticesIdentifier,
+		Description: formDescription(TestOperatorInstallStatusIdentifier,
 			`Ensures that CNF Operators abide by best practices.  The following is tested:
 1. The Operator CSV reports "Installed" status.
-2. The Operator is installed using through an Operator subscription catalog.`),
+2. TODO: Describe operator scc check.`),
 	},
 
 	TestOperatorIsCertifiedIdentifier: {
@@ -314,11 +320,19 @@ the same hacks.'`),
 		Type:       informativeResult,
 		Remediation: `In most cases, Pod's should not specify their host Nodes through nodeSelector or nodeAffinity.  However, there are
 cases in which CNFs require specialized hardware specific to a particular class of Node.  As such, this test is purely
-informative,  and will not prevent a CNF from being certified.  However, one should have an appropriate justification as
+informative, and will not prevent a CNF from being certified. However, one should have an appropriate justification as
 to why nodeSelector and/or nodeAffinity is utilized by a CNF.`,
 		Description: formDescription(TestPodNodeSelectorAndAffinityBestPractices,
 			`ensures that CNF Pods do not specify nodeSelector or nodeAffinity.  In most cases, Pods should allow for
 instantiation on any underlying Node.`),
+	},
+
+	TestPodHighAvailabilityBestPractices: {
+		Identifier:  TestPodHighAvailabilityBestPractices,
+		Type:        informativeResult,
+		Remediation: `In high availability cases, Pod podAntiAffinity rule should be specified for pod scheduling and pod replica value is set to more than 1 .`,
+		Description: formDescription(TestPodHighAvailabilityBestPractices,
+			`ensures that CNF Pods specify podAntiAffinity rules and replica value is set to more than 1.`),
 	},
 
 	TestPodClusterRoleBindingsBestPracticesIdentifier: {
@@ -335,7 +349,7 @@ ClusterRoleBindings, if possible.`,
 		Type:        normativeResult,
 		Remediation: `Deploy the CNF using DaemonSet or ReplicaSet.`,
 		Description: formDescription(TestPodDeploymentBestPracticesIdentifier,
-			`tests that CNF Pod(s) are deployed as part of either DaemonSet(s) or a ReplicaSet(s).`),
+			`tests that CNF Pod(s) are deployed as part of a ReplicaSet(s).`),
 	},
 
 	TestPodRoleBindingsBestPracticesIdentifier: {
@@ -415,5 +429,36 @@ the changes for you.`,
 		Remediation: "",
 		Description: formDescription(TestNodesHwInfoIdentifier,
 			`list nodes HW info`),
+	},
+
+	TestShudtownIdentifier: {
+		Identifier: TestShudtownIdentifier,
+		Type:       normativeResult,
+		Description: formDescription(TestShudtownIdentifier,
+			`Ensure that the containers lifecycle pre-stop management feature is configured.`),
+		Remediation: `
+		It's considered best-practices to define prestop for proper management of container lifecycle.
+		The prestop can be used to gracefully stop the container and clean resources (e.g., DB connexion).
+		
+		The prestop can be configured using :
+		 1) Exec : executes the supplied command inside the container
+		 2) HTTP : executes HTTP request against the specified endpoint.
+		
+		When defined. K8s will handle shutdown of the container using the following:
+		1) K8s first execute the preStop hook inside the container.
+		2) K8s will wait for a grace perdiod.
+		3) K8s will clean the remaining processes using KILL signal.		
+			`,
+	},
+	TestPodRecreationIdentifier: {
+		Identifier: TestPodRecreationIdentifier,
+		Type:       normativeResult,
+		Description: formDescription(TestPodRecreationIdentifier,
+			`tests that a CNF is configured to support High Availability.  
+			First, this test cordons and drains a Node that hosts the CNF Pod.  
+			Next, the test ensures that OpenShift can re-instantiate the Pod on another Node, 
+			and that the actual replica count matches the desired replica count.`),
+		Remediation: `Ensure that CNF Pod(s) utilize a configuration that supports High Availability.  
+			Additionally, ensure that there are available Nodes in the OpenShift cluster that can be utilized in the event that a host Node fails.`,
 	},
 }
