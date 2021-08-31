@@ -87,11 +87,6 @@ var _ = ginkgo.Describe(testSpecName, func() {
 			goExpectSpawner := interactive.NewGoExpectSpawner()
 			var spawner interactive.Spawner = goExpectSpawner
 			context, err = interactive.SpawnShell(&spawner, defaultTimeout, interactive.Verbose(true))
-			ginkgo.It("should be created without error", func() {
-				gomega.Expect(err).To(gomega.BeNil())
-				gomega.Expect(context).ToNot(gomega.BeNil())
-				gomega.Expect(context.GetExpecter()).ToNot(gomega.BeNil())
-			})
 		})
 		ginkgo.Context("Runs test on operators", func() {
 			itRunsTestsOnOperator()
@@ -104,6 +99,9 @@ var _ = ginkgo.Describe(testSpecName, func() {
 func testOperatorsAreInstalledViaOLM() {
 	testID := identifiers.XformToGinkgoItIdentifier(identifiers.TestOperatorIsInstalledViaOLMIdentifier)
 	ginkgo.It(testID, func() {
+		gomega.Expect(err).To(gomega.BeNil())
+		gomega.Expect(context).ToNot(gomega.BeNil())
+		gomega.Expect(context.GetExpecter()).ToNot(gomega.BeNil())
 		_, operatorsInTest := getConfig()
 		for _, operatorInTest := range operatorsInTest {
 			defer results.RecordResult(identifiers.TestOperatorIsInstalledViaOLMIdentifier)
@@ -145,6 +143,9 @@ func getConfig() ([]configsections.CertifiedOperatorRequestInfo, []configsection
 func itRunsTestsOnOperator() {
 	testID := identifiers.XformToGinkgoItIdentifier(identifiers.TestOperatorIsCertifiedIdentifier)
 	ginkgo.It(testID, func() {
+		gomega.Expect(err).To(gomega.BeNil())
+		gomega.Expect(context).ToNot(gomega.BeNil())
+		gomega.Expect(context.GetExpecter()).ToNot(gomega.BeNil())
 		operatorsToQuery, operatorsInTest := getConfig()
 		if len(operatorsToQuery) > 0 {
 			certAPIClient := api.NewHTTPClient()
