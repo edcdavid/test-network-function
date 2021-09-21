@@ -92,7 +92,7 @@ func (e *ExecSpawnFunc) Wait() error {
 
 // Close wraps exec.cmd.Process.Kill().
 func (e *ExecSpawnFunc) Close() error {
-	return e.cmd.Process.Kill()
+	return e.cmd.Process.Signal(os.Interrupt)
 }
 
 // IsRunning returns true if e.Cmd.ProcessState is nil, false otherwise
