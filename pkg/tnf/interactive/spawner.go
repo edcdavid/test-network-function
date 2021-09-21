@@ -62,6 +62,9 @@ type SpawnFunc interface {
 	// Wait consult exec.Cmd.Wait
 	Wait() error
 
+	// Close kills the process spawned for the command
+	Close() error
+
 	// IsRunning returns true if the shell hasn't exited yet.
 	IsRunning() bool
 
@@ -85,6 +88,11 @@ func (e *ExecSpawnFunc) Command(name string, arg ...string) *SpawnFunc {
 // Wait wraps exec.Cmd.Wait.
 func (e *ExecSpawnFunc) Wait() error {
 	return e.cmd.Wait()
+}
+
+// Close wraps exec.cmd.Process.Kill().
+func (e *ExecSpawnFunc) Close() error {
+	return e.cmd.Process.Kill()
 }
 
 // IsRunning returns true if e.Cmd.ProcessState is nil, false otherwise
@@ -311,7 +319,7 @@ func (g *GoExpectSpawner) spawnGeneric(spawnFunc *SpawnFunc, stdinPipe io.WriteC
 			return (*spawnFunc).Wait()
 		},
 		Close: func() error {
-			return nil
+			return (*spawnFunc).Close()
 		},
 		Check: func() bool {
 			if !(*spawnFunc).IsRunning() {

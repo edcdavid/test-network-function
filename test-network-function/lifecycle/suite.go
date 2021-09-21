@@ -307,6 +307,7 @@ func testPodsRecreation(env *config.TestEnvironment) {
 		}
 		ginkgo.By("should create new replicas when node is drained")
 		defer results.RecordResult(identifiers.TestPodRecreationIdentifier)
+		env.DeleteContainerSessions()
 		for _, n := range nodesNames {
 			// drain node
 			drainNode(n.name) // should go in this

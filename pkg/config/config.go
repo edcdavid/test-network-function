@@ -22,6 +22,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/onsi/ginkgo"
 	"github.com/onsi/gomega"
 	log "github.com/sirupsen/logrus"
 	"github.com/test-network-function/test-network-function/pkg/config/autodiscover"
@@ -84,6 +85,7 @@ func getOcSession(pod, container, namespace string, timeout time.Duration, optio
 		gomega.Expect(err).To(gomega.BeNil())
 		// Set up a go routine which reads from the error channel
 		go func() {
+			defer ginkgo.GinkgoRecover()
 			err := <-outCh
 			gomega.Expect(err).To(gomega.BeNil())
 		}()
@@ -195,6 +197,17 @@ func (env *TestEnvironment) doAutodiscover() {
 	log.Info(env.TestOrchestrator)
 	log.Info(env.ContainersUnderTest)
 	env.needsRefresh = false
+}
+
+// DeleteContainerSessions kills all container sessions before draining the node.
+// They will be re-created by auto-discovery after the nodes are uncordoned
+func (env *TestEnvironment) DeleteContainerSessions() {
+	for _, cut := range env.ContainersUnderTest {
+		err := (*cut.Oc.GetExpecter()).Close()
+		if err != nil {
+			log.Error(err)
+		}
+	}
 }
 
 // createContainers contains the general steps involved in creating "oc" sessions and other configuration. A map of the
