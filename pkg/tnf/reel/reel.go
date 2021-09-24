@@ -18,7 +18,9 @@ package reel
 
 import (
 	"fmt"
+	log "github.com/sirupsen/logrus"
 	"regexp"
+	"strconv"
 	"strings"
 	"time"
 
@@ -29,14 +31,13 @@ import (
 const (
 	// EndOfTestSentinel is the emulated terminal prompt that will follow command output.
 	EndOfTestSentinel = `END_OF_TEST_SENTINEL`
+	ExitKeyword = "exit="
 )
 
 var (
-	// endOfTestSentinelCutset is used to trim a match of the EndOfTestSentinel.
-	endOfTestSentinelCutset = fmt.Sprintf("%s\n", EndOfTestSentinel)
 	// EndOfTestRegexPostfix is the postfix added to regular expressions to match the emulated terminal prompt
 	// (EndOfTestSentinel)
-	EndOfTestRegexPostfix = fmt.Sprintf("((.|\n)*%s\n)", EndOfTestSentinel)
+	EndOfTestRegexPostfix = fmt.Sprintf("((.|\n)*%s.*\n)", EndOfTestSentinel)
 )
 
 // Step is an instruction for a single REEL pass.
@@ -188,9 +189,9 @@ func (r *Reel) Step(step *Step, handler Handler) error {
 			if len(results) > 0 {
 				result := results[0]
 
-				output := r.stripEmulatedPromptFromOutput(result.Output)
-				match := r.stripEmulatedPromptFromOutput(result.Match[0])
-
+				output,outpuStatus := r.stripEmulatedPromptFromOutput(result.Output)
+				match,matchStatus := r.stripEmulatedPromptFromOutput(result.Match[0])
+				log.Info("status %s %s", outpuStatus,matchStatus )
 				matchIndex := strings.Index(output, match)
 				var before string
 				// special case:  the match regex may be nothing at all.
@@ -254,15 +255,23 @@ func (r *Reel) wrapTestCommand(cmd string) string {
 // WrapTestCommand wraps cmd so that the output will end in an emulated terminal prompt.
 func WrapTestCommand(cmd string) string {
 	cmd = strings.TrimRight(cmd, "\n")
-	return fmt.Sprintf("%s && echo %s\n", cmd, EndOfTestSentinel)
+	return fmt.Sprintf("%s && echo %s exit=$?\n", cmd, EndOfTestSentinel)
 }
 
 // stripEmulatedPromptFromOutput will elide the emulated terminal prompt from the test output.
-func (r *Reel) stripEmulatedPromptFromOutput(output string) string {
+func (r *Reel) stripEmulatedPromptFromOutput(output string) (data string, status int) {
+	var parsed []string
 	if !r.disableTerminalPromptEmulation {
-		return strings.TrimRight(strings.TrimRight(output, endOfTestSentinelCutset), "\n")
+		parsed = strings.Split(output, EndOfTestSentinel)
 	}
-	return output
+	data = parsed[0]
+
+	status,err := strconv.Atoi(strings.Split(strings.Split( parsed[1],ExitKeyword)[1],"\n")[0])
+	if err != nil{
+		status=1
+		log.Error("Cannot determine command status. Error: %s",err)
+	}
+	return
 }
 
 // stripEmulatedRegularExpression will elide the modified part of the terminal prompt regular expression.
