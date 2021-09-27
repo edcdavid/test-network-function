@@ -191,7 +191,7 @@ func (r *Reel) Step(step *Step, handler Handler) error {
 
 				output,outpuStatus := r.stripEmulatedPromptFromOutput(result.Output)
 				match,matchStatus := r.stripEmulatedPromptFromOutput(result.Match[0])
-				log.Info("status %s %s", outpuStatus,matchStatus )
+				log.Infof("status %d %d", outpuStatus,matchStatus )
 				matchIndex := strings.Index(output, match)
 				var before string
 				// special case:  the match regex may be nothing at all.
@@ -200,7 +200,8 @@ func (r *Reel) Step(step *Step, handler Handler) error {
 				} else {
 					before = ""
 				}
-				step = handler.ReelMatch(r.stripEmulatedRegularExpression(firstMatch), before, match)
+				amatch:=r.stripEmulatedRegularExpression(firstMatch)
+				step = handler.ReelMatch(amatch, before, match)
 			}
 		}
 	}
@@ -269,7 +270,7 @@ func (r *Reel) stripEmulatedPromptFromOutput(output string) (data string, status
 	status,err := strconv.Atoi(strings.Split(strings.Split( parsed[1],ExitKeyword)[1],"\n")[0])
 	if err != nil{
 		status=1
-		log.Error("Cannot determine command status. Error: %s",err)
+		log.Errorf("Cannot determine command status. Error: %s",err)
 	}
 	return
 }
