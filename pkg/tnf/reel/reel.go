@@ -189,9 +189,12 @@ func (r *Reel) Step(step *Step, handler Handler) error {
 			if len(results) > 0 {
 				result := results[0]
 
-				output,outpuStatus := r.stripEmulatedPromptFromOutput(result.Output)
+				output,outputStatus := r.stripEmulatedPromptFromOutput(result.Output)
+				if outputStatus!=0{
+					r.Err=fmt.Errorf("error executing command %d: ",outputStatus )
+				}
 				match,matchStatus := r.stripEmulatedPromptFromOutput(result.Match[0])
-				log.Infof("status %d %d", outpuStatus,matchStatus )
+				log.Infof("command status: outputStatus=%d, matchStatus=%d", outputStatus,matchStatus )
 				matchIndex := strings.Index(output, match)
 				var before string
 				// special case:  the match regex may be nothing at all.
@@ -261,16 +264,20 @@ func WrapTestCommand(cmd string) string {
 
 // stripEmulatedPromptFromOutput will elide the emulated terminal prompt from the test output.
 func (r *Reel) stripEmulatedPromptFromOutput(output string) (data string, status int) {
-	var parsed []string
-	if !r.disableTerminalPromptEmulation {
-		parsed = strings.Split(output, EndOfTestSentinel)
-	}
-	data = parsed[0]
-
-	status,err := strconv.Atoi(strings.Split(strings.Split( parsed[1],ExitKeyword)[1],"\n")[0])
-	if err != nil{
-		status=1
-		log.Errorf("Cannot determine command status. Error: %s",err)
+	parsed := strings.Split(output, EndOfTestSentinel)
+	if !r.disableTerminalPromptEmulation && len(parsed)>1 {
+		data = parsed[0]
+    var err error
+		status,err = strconv.Atoi(strings.Split(strings.Split( parsed[1],ExitKeyword)[1],"\n")[0])
+		if err != nil{
+			// Cannot parse status, something is wrong, fail command
+			status=1
+			log.Errorf("Cannot determine command status. Error: %s",err)
+		}
+	}else{
+		// Cannot determine status because no sentinel is present
+		data=output
+		status=0
 	}
 	return
 }
