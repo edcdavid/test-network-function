@@ -61,7 +61,7 @@ func (ver *VersionOCP) GetVersions() []string {
 
 // GetIdentifier returns the tnf.Test specific identifiesa.
 func (ver *VersionOCP) GetIdentifier() identifier.Identifier {
-	return identifier.VersionOcpIdentifier
+	return identifier.ClusterVersionIdentifier
 }
 
 // Timeout returns the timeout in seconds for the test.

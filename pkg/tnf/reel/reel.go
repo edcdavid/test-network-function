@@ -37,7 +37,11 @@ const (
 var (
 	// EndOfTestRegexPostfix is the postfix added to regular expressions to match the emulated terminal prompt
 	// (EndOfTestSentinel)
-	EndOfTestRegexPostfix = fmt.Sprintf("((.|\n)*%s.*\n)", EndOfTestSentinel)
+	// This is matching stricly the sentinel and exit code (if the command returned empty string on STDOUT)
+	matchSentinel=fmt.Sprintf("((.|\n)*%s %s[0-9]+\n)", EndOfTestSentinel,ExitKeyword)
+	// This is first alternative is matching the command output with user passed expect string and the sentinel at the end.
+	// In the second alternative, if the command returns nothing, just the sentinel is matched 
+	EndOfTestRegexPostfix = matchSentinel+"|"+matchSentinel
 )
 
 // Step is an instruction for a single REEL pass.
@@ -259,7 +263,9 @@ func (r *Reel) wrapTestCommand(cmd string) string {
 // WrapTestCommand wraps cmd so that the output will end in an emulated terminal prompt.
 func WrapTestCommand(cmd string) string {
 	cmd = strings.TrimRight(cmd, "\n")
-	return fmt.Sprintf("%s && echo %s exit=$?\n", cmd, EndOfTestSentinel)
+	wrappedCommand:=fmt.Sprintf("%s ; echo %s %s$?\n", cmd, EndOfTestSentinel,ExitKeyword)
+	log.Trace("Command sent: %s",wrappedCommand)
+	return wrappedCommand
 }
 
 // stripEmulatedPromptFromOutput will elide the emulated terminal prompt from the test output.
@@ -293,7 +299,8 @@ func (r *Reel) stripEmulatedRegularExpression(match string) string {
 // addEmulatedRegularExpression will append the additional regular expression to capture the emulated terminal prompt.
 func (r *Reel) addEmulatedRegularExpression(regularExpressionString string) string {
 	if !r.disableTerminalPromptEmulation {
-		return fmt.Sprintf("%s%s", regularExpressionString, EndOfTestRegexPostfix)
+		regularExpressionStringWithMetadata:=fmt.Sprintf("%s%s", regularExpressionString, EndOfTestRegexPostfix)
+		return regularExpressionStringWithMetadata
 	}
 	return regularExpressionString
 }
