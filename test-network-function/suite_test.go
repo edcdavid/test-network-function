@@ -114,9 +114,9 @@ func TestTest(t *testing.T) {
 	// set up input flags and register failure handlers.
 	flag.Parse()
 	gomega.RegisterFailHandler(ginkgo.Fail)
-	log.Info("Version: ", programVersion, " ( ", GitCommit, " )")
-	common.SetLogLevel()
 	common.SetLogFormat()
+	common.SetLogLevel()
+	log.Info("Version: ", programVersion, " ( ", GitCommit, " )")
 	tnfcommon.OcDebugImageID = common.GetOcDebugImageID()
 
 	// Initialize the claim with the start time, tnf version, etc.
@@ -166,11 +166,11 @@ func getTNFVersion() *version.Version {
 // incorporateTNFVersion adds the TNF version to the claim.
 func incorporateVersions(claimData *claim.Claim) {
 	claimData.Versions = &claim.Versions{
-		Tnf:      getTNFVersion().Tag,
+		Tnf:          getTNFVersion().Tag,
 		TnfGitCommit: GitCommit,
-		OcClient: diagnostic.GetVersionsOcp()[0],
-		Ocp:      diagnostic.GetVersionsOcp()[1],
-		K8s:      diagnostic.GetVersionsOcp()[2],
+		OcClient:     diagnostic.GetVersionsOcp().Oc,
+		Ocp:          diagnostic.GetVersionsOcp().Ocp,
+		K8s:          diagnostic.GetVersionsOcp().K8s,
 	}
 }
 
