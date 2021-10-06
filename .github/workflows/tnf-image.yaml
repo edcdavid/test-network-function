@@ -52,11 +52,10 @@ jobs:
 
       - name: checkout the latest for the script directory
         run: |
+          ls -ltr script
+          git branch 
           ls -ltr
           git status
-          git branch ls -ltr script
-          git checkout released-version-from-tag2 -- script/create-version-files.sh
-          git checkout released-version-from-tag2 -- script/get-git-latest-release.sh
 
       - name: Get the latest TNF version from GIT
         run: |
