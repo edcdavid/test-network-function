@@ -79,11 +79,13 @@ jobs:
         env:
           VERSION_FROM_FILE_PARTNER: ${{ fromJSON(steps.get_version_json_file.outputs.json).partner_tag }}
           
-      - name: Ensure $TNF_VERSION and $IMAGE_TAG are set
+      - name: Update env variables
         run: |
           echo "TNF_VERSION=${{ steps.set_tnf_version.outputs.version_number }}" >> $GITHUB_ENV
           echo "PARTNER_VERSION=${{ steps.set_partner_version.outputs.partner_version_number }}" >> $GITHUB_ENV
-          '[[ -n "$TNF_VERSION" ]] && [[ -n "$IMAGE_TAG" ]] && [[ -n "$PARTNER_VERSION" ]]'
+ 
+      - name: Ensure $TNF_VERSION and $IMAGE_TAG are set
+        run: '[[ -n "$TNF_VERSION" ]] && [[ -n "$IMAGE_TAG" ]] && [[ -n "$PARTNER_VERSION" ]]'
 
       - name: Check whether the vtnf-image.yamlersion tag exists on remote
         run: git ls-remote --exit-code $TNF_SRC_URL refs/tags/$TNF_VERSION
