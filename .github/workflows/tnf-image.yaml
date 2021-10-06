@@ -46,7 +46,7 @@ jobs:
       CURRENT_VERSION_GENERIC_BRANCH: ${{ matrix.branch }}
     steps:
 
-         - name: Checkout generic working branch of the current version
+      - name: Checkout generic working branch of the current version
         uses: actions/checkout@v2
         with:
           ref: ${{ env.CURRENT_VERSION_GENERIC_BRANCH }}
