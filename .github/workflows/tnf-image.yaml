@@ -37,12 +37,10 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        branch: [ 3.0.x main]
+        branch: [ 3.0.x main ]
     env:
       SHELL: /bin/bash
       KUBECONFIG: '/home/runner/.kube/config'
-      TNF_VERSION: ${{ steps.set_tnf_version.outputs.version_number }}
-      PARTNER_VERSION: ${{ steps.set_partner_version.outputs.partner_version_number }}
       CURRENT_VERSION_GENERIC_BRANCH: ${{ matrix.branch }}
     steps:
 
@@ -73,9 +71,12 @@ jobs:
         id: set_partner_version
         env:
           VERSION_FROM_FILE_PARTNER: ${{ fromJSON(steps.get_version_json_file.outputs.json).partner_tag }}
-
+          
       - name: Ensure $TNF_VERSION and $IMAGE_TAG are set
         run: '[[ -n "$TNF_VERSION" ]] && [[ -n "$IMAGE_TAG" ]] && [[ -n "$PARTNER_VERSION" ]]'
+        env:
+          TNF_VERSION: ${{ steps.set_tnf_version.outputs.version_number }}
+          PARTNER_VERSION: ${{ steps.set_partner_version.outputs.partner_version_number }}
 
       - name: Check whether the vtnf-image.yamlersion tag exists on remote
         run: git ls-remote --exit-code $TNF_SRC_URL refs/tags/$TNF_VERSION
