@@ -1,4 +1,4 @@
-name: 'Publish the `test-network-function` image (latest release only)'
+name: 'Publish the next `test-network-function` image (latest 3.1 release only)'
 on:
   # Run the workflow when a new release gets published
   release:
