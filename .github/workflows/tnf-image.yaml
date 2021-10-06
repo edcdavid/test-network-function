@@ -52,7 +52,8 @@ jobs:
 
       - name: checkout the latest for the script directory
         run: |
-          git checkout HEAD -- script
+          git checkout HEAD -- script/create-version-files.sh
+          git checkout HEAD -- script/get-git-latest-release.sh
 
       - name: Get the latest TNF version from GIT
         run: |
