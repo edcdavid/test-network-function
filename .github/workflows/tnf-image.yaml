@@ -1,4 +1,4 @@
-name: 'Publish all releases (matrix)'
+name: 'Publish the `test-network-function` image (latest release only)'
 on:
   # Run the workflow when a new release gets published
   release:
