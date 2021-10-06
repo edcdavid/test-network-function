@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        branch: [3.0.x, main]
+        branch: [refactor-container, main]
     env:
       SHELL: /bin/bash
       KUBECONFIG: '/home/runner/.kube/config'
@@ -54,7 +54,7 @@ jobs:
         if: ${{ failure() }}
         run: |
           git checkout HEAD -- script
-          
+
       - name: Get the latest TNF version from GIT
         run: |
           script/create-version-files.sh  > /dev/null 2>&1
