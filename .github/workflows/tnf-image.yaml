@@ -18,7 +18,7 @@ defaults:
 env:
   REGISTRY: quay.io
   REGISTRY_LOCAL: localhost
-  IMAGE_NAME: testnetworkfunction/test-network-function
+  IMAGE_NAME: deliedit/test-network-function
   IMAGE_TAG: latest
   TNF_CONTAINER_CLIENT: docker
   TNF_MINIKUBE_ONLY: true
@@ -82,6 +82,7 @@ jobs:
       - name: Update env variables
         run: |
           echo "TNF_VERSION=${{ steps.set_tnf_version.outputs.version_number }}" >> $GITHUB_ENV
+          echo "IMAGE_TAG=${{ steps.set_tnf_version.outputs.version_number }}" >> $GITHUB_ENV
           echo "PARTNER_VERSION=${{ steps.set_partner_version.outputs.partner_version_number }}" >> $GITHUB_ENV
  
       - name: Ensure $TNF_VERSION and $IMAGE_TAG are set
