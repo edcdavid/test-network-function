@@ -37,7 +37,7 @@ jobs:
     runs-on: ubuntu-20.04
     strategy:
       matrix:
-        branch: [ 3.0.x main ]
+        branch: [3.0.x, main]
     env:
       SHELL: /bin/bash
       KUBECONFIG: '/home/runner/.kube/config'
@@ -50,6 +50,11 @@ jobs:
           ref: ${{ env.CURRENT_VERSION_GENERIC_BRANCH }}
           fetch-depth: '0'
 
+      - name: checkout the latest for the script directory
+        if: ${{ failure() }}
+        run: |
+          git checkout HEAD -- script
+          
       - name: Get the latest TNF version from GIT
         run: |
           script/create-version-files.sh  > /dev/null 2>&1
