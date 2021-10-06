@@ -51,7 +51,6 @@ jobs:
           fetch-depth: '0'
 
       - name: checkout the latest for the script directory
-        if: ${{ failure() }}
         run: |
           git checkout HEAD -- script
 
