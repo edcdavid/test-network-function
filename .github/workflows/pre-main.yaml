@@ -116,12 +116,6 @@ jobs:
         with:
           working_directory: cnf-certification-test-partner
 
-      - name: 'test csv1'
-        run: oc get csv
-
-      - name: 'test csv2'
-        run: oc get csv -n tnf
-
       - name: 'test csv3'
         run: oc get clusterserviceversions.operators.coreos.com -n tnf 
       
