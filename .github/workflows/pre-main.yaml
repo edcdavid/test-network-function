@@ -103,8 +103,9 @@ jobs:
       - name: Check out `cnf-certification-test-partner`
         uses: actions/checkout@v2
         with:
-          repository: test-network-function/cnf-certification-test-partner
+          repository: edcdavid/cnf-certification-test-partner
           path: cnf-certification-test-partner
+          ref: simplify-operator
 
       - name: Start the minikube cluster for `local-test-infra`
         uses: ./cnf-certification-test-partner/.github/actions/start-minikube
@@ -176,6 +177,7 @@ jobs:
 
       - name: 'Test: Run generic test suite in a TNF container'
         run: ./run-tnf-container.sh ${{ env.TESTING_CMD_PARAMS }} -f access-control lifecycle platform observablility networking affiliated-certification operator
+
 
       # Push the new unstable TNF image to Quay.io.
 
