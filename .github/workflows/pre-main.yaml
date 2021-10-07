@@ -116,14 +116,50 @@ jobs:
         with:
           working_directory: cnf-certification-test-partner
 
+      - name: 'test csv1'
+        run: oc get csv
+
+      - name: 'test csv2'
+        run: oc get csv -n tnf
+
+      - name: 'test csv3'
+        run: oc get clusterserviceversions.operators.coreos.com -n tnf 
+      
+      - name: 'test csv3'
+        run: oc get clusterserviceversions.operators.coreos.com -A 
+
       # Perform smoke tests.
 
       - name: 'Test: Run diagnostic test suite'
         run: ./run-cnf-suites.sh --focus diagnostic
 
+      - name: 'test csv1'
+        run: oc get csv
+
+      - name: 'test csv2'
+        run: oc get csv -n tnf
+
+      - name: 'test csv3'
+        run: oc get clusterserviceversions.operators.coreos.com -n tnf 
+      
+      - name: 'test csv3'
+        run: oc get clusterserviceversions.operators.coreos.com -A 
+
       - name: 'Test: Run test suites'
         run: ./run-cnf-suites.sh --focus access-control lifecycle platform observablility networking affiliated-certification operator
       # Perform smoke tests using a TNF container.
+
+      - name: 'test csv1'
+        run: oc get csv
+
+      - name: 'test csv2'
+        run: oc get csv -n tnf
+
+      - name: 'test csv3'
+        run: oc get clusterserviceversions.operators.coreos.com -n tnf 
+      
+      - name: 'test csv3'
+        run: oc get clusterserviceversions.operators.coreos.com -A 
 
       - name: Build the `test-network-function` image
         run: |
