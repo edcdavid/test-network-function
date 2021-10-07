@@ -29,10 +29,10 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Set up Go 1.16
+      - name: Set up Go 1.15
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.16
+          go-version: ^1.15
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
@@ -42,10 +42,13 @@ jobs:
       - name: Rebuild mocks
         run: go get github.com/golang/mock/mockgen && make mocks
 
+      - name: Install golint
+        run: go get golang.org/x/lint/golint
+
       # TODO: golangci-lint team recommends using a GitHub Action to perform golangci-lint responsibilities.  However
       # there does not appear to be a way to honor our existing .golangci.yml.  For now, mimic developer behavior.
       - name: Install golangci-lint
-        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.42.1
+        run: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.39.0
 
       - name: make lint
         run: make lint
@@ -55,10 +58,10 @@ jobs:
     runs-on: ubuntu-20.04
 
     steps:
-      - name: Set up Go 1.16
+      - name: Set up Go 1.15
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.16
+          go-version: ^1.15
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
@@ -79,10 +82,10 @@ jobs:
       KUBECONFIG: '/home/runner/.kube/config'
 
     steps:
-      - name: Set up Go 1.16
+      - name: Set up Go 1.15
         uses: actions/setup-go@v2
         with:
-          go-version: ^1.16
+          go-version: ^1.15
 
       - name: Check out code into the Go module directory
         uses: actions/checkout@v2
@@ -103,9 +106,8 @@ jobs:
       - name: Check out `cnf-certification-test-partner`
         uses: actions/checkout@v2
         with:
-          repository: edcdavid/cnf-certification-test-partner
+          repository: test-network-function/cnf-certification-test-partner
           path: cnf-certification-test-partner
-          ref: simplify-operator
 
       - name: Start the minikube cluster for `local-test-infra`
         uses: ./cnf-certification-test-partner/.github/actions/start-minikube
@@ -117,44 +119,14 @@ jobs:
         with:
           working_directory: cnf-certification-test-partner
 
-      - name: 'test csv3'
-        run: oc get clusterserviceversions.operators.coreos.com -n tnf 
-      
-      - name: 'test csv3'
-        run: oc get clusterserviceversions.operators.coreos.com -A 
-
       # Perform smoke tests.
 
       - name: 'Test: Run diagnostic test suite'
         run: ./run-cnf-suites.sh --focus diagnostic
 
-      - name: 'test csv1'
-        run: oc get csv
-
-      - name: 'test csv2'
-        run: oc get csv -n tnf
-
-      - name: 'test csv3'
-        run: oc get clusterserviceversions.operators.coreos.com -n tnf 
-      
-      - name: 'test csv3'
-        run: oc get clusterserviceversions.operators.coreos.com -A 
-
       - name: 'Test: Run test suites'
         run: ./run-cnf-suites.sh --focus access-control lifecycle platform observablility networking affiliated-certification operator
       # Perform smoke tests using a TNF container.
-
-      - name: 'test csv1'
-        run: oc get csv
-
-      - name: 'test csv2'
-        run: oc get csv -n tnf
-
-      - name: 'test csv3'
-        run: oc get clusterserviceversions.operators.coreos.com -n tnf 
-      
-      - name: 'test csv3'
-        run: oc get clusterserviceversions.operators.coreos.com -A 
 
       - name: Build the `test-network-function` image
         run: |
@@ -177,7 +149,6 @@ jobs:
 
       - name: 'Test: Run generic test suite in a TNF container'
         run: ./run-tnf-container.sh ${{ env.TESTING_CMD_PARAMS }} -f access-control lifecycle platform observablility networking affiliated-certification operator
-
 
       # Push the new unstable TNF image to Quay.io.
 
