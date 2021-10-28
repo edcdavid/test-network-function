@@ -27,6 +27,7 @@ import (
 	"github.com/test-network-function/test-network-function/pkg/tnf/handlers/generic"
 	"github.com/test-network-function/test-network-function/pkg/tnf/handlers/scaling"
 	"github.com/test-network-function/test-network-function/pkg/tnf/testcases"
+	"github.com/test-network-function/test-network-function/pkg/utils"
 
 	"github.com/test-network-function/test-network-function/test-network-function/common"
 	"github.com/test-network-function/test-network-function/test-network-function/identifiers"
@@ -49,6 +50,10 @@ const (
 	drainTimeoutMinutes           = 5
 	scalingTimeout                = 60 * time.Second
 	scalingPollingPeriod          = 1 * time.Second
+	// maxPossibleEvents Maximum possible events 
+	maxPossibleEvents             = "200000"
+	// lastEventsCollected Last x events to collect from event list
+	lastEventsCollected           = "20"
 )
 
 var (
@@ -312,6 +317,24 @@ func testPodsRecreation(env *config.TestEnvironment) {
 			// verify deployments are ready again
 			_, notReadyDeployments = getDeployments(env.NameSpaceUnderTest)
 			if len(notReadyDeployments) != 0 {
+				// Refresh the env datastructure to get the current pods
+				env.LoadAndRefresh()
+				// Collect logs for each pod under test
+				for _, p := range env.PodsUnderTest {
+					podStatus,err:=utils.ExecuteCommand("oc get pod -n "+p.Namespace +" "+ p.Name +"|tail -n1")
+					if err!=nil {
+						log.Errorf("Command trying to get pod status with: %s", err)
+					}else {
+						log.Debugf("Events for Pod %s in namespace %s are:\n%s", p.Name, p.Namespace, podStatus)
+					}
+					podEvents,err:=utils.ExecuteCommand("oc describe pod -n "+p.Namespace +" "+ p.Name +" |  grep -A"+maxPossibleEvents+" Events| tail -n"+lastEventsCollected)
+					if err!=nil {
+						log.Errorf("Command trying to describe pod events failed with: %s", err)
+					}else {
+						log.Debugf("Events for Pod %s in namespace %s are:\n%s", p.Name, p.Namespace, podEvents)
+					}
+
+				}
 				uncordonNode(n.Name)
 				ginkgo.Fail(fmt.Sprintf("did not create replicas when node %s is drained", n.Name))
 			}

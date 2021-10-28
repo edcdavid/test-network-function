@@ -27,6 +27,7 @@ import (
 	ds "github.com/test-network-function/test-network-function/pkg/tnf/handlers/daemonset"
 	"github.com/test-network-function/test-network-function/pkg/tnf/interactive"
 	"github.com/test-network-function/test-network-function/pkg/tnf/reel"
+	"github.com/test-network-function/test-network-function/pkg/utils"
 )
 
 const (
@@ -60,7 +61,7 @@ func FindDebugPods(tp *configsections.TestPartner) {
 func AddDebugLabel(nodeName string) {
 	log.Info("add label", nodeLabelName, "=", nodeLabelValue, " to node ", nodeName)
 	ocCommand := fmt.Sprintf(addlabelCommand, nodeName, nodeLabelName, nodeLabelValue)
-	_, err := executeOcCommand(ocCommand)
+	_, err := utils.ExecuteCommand(ocCommand)
 	if err != nil {
 		log.Error("error in adding label to node ", nodeName)
 		return
@@ -71,7 +72,7 @@ func AddDebugLabel(nodeName string) {
 func DeleteDebugLabel(nodeName string) {
 	log.Info("delete label", nodeLabelName, "=", nodeLabelValue, "to node ", nodeName)
 	ocCommand := fmt.Sprintf(deletelabelCommand, nodeName, nodeLabelName)
-	_, err := executeOcCommand(ocCommand)
+	_, err := utils.ExecuteCommand(ocCommand)
 	if err != nil {
 		log.Error("error in removing label from node ", nodeName)
 		return
