@@ -125,7 +125,8 @@ jobs:
       - name: Check out `cnf-certification-test-partner`
         uses: actions/checkout@v2
         with:
-          repository: test-network-function/cnf-certification-test-partner
+          repository: edc_david/cnf-certification-test-partner
+          ref: fix-minikube-labels 
           path: cnf-certification-test-partner
 
       - name: Start the minikube cluster for `local-test-infra`
