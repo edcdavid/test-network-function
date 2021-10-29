@@ -110,13 +110,15 @@ func getOcSession(pod, container, namespace string, timeout time.Duration, optio
 		gomega.Expect(err).To(gomega.BeNil())
 		// Set up a go routine which reads from the error channel
 		go func() {
+			log.Infof("start watching the session with container %s/%s", oc.GetPodName(), oc.GetPodContainerName())
+			Loop:
 			for {
 				select {
 				case err := <-outCh:
 					log.Fatalf("OC session to container %s/%s is broken due to: %v, aborting the test run", oc.GetPodName(), oc.GetPodContainerName(), err)
 				case <-oc.GetDoneChannel():
 					log.Infof("stop watching the session with container %s/%s", oc.GetPodName(), oc.GetPodContainerName())
-					return
+					break Loop
 				}
 			}
 		}()
@@ -231,6 +233,10 @@ func (env *TestEnvironment) doAutodiscover() {
 	for _, cid := range env.Config.ExcludeContainersFromConnectivityTests {
 		env.ContainersToExcludeFromConnectivityTests[cid] = ""
 	}
+	// Sessions before re-creating them
+  for _, cut := range env.ContainersUnderTest {
+		cut.Oc.Close()
+	} 
 
 	env.ContainersUnderTest = env.createContainers(env.Config.ContainerConfigList)
 	env.PodsUnderTest = env.Config.PodsUnderTest
