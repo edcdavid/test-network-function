@@ -39,7 +39,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        branch: [3.1.x, 3.2.x, ${LATEST_BRANCH_VERSION}]
+        branch: [3.1.x, 3.2.x, "${LATEST_BRANCH_VERSION}"]
     env:
       SHELL: /bin/bash
       KUBECONFIG: '/home/runner/.kube/config'
