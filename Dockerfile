@@ -12,7 +12,7 @@ ENV TNF_BIN_DIR=${TNF_DIR}/test-network-function
 ENV TEMP_DIR=/tmp
 
 # Install dependencies
-RUN yum install -y gcc git jq make wget
+RUN yum install -y gcc git jq make wget helm
 
 # Install Go binary
 ENV GO_DL_URL="https://golang.org/dl"
