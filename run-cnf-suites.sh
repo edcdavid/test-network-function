@@ -3,6 +3,11 @@ set -x
 # defaults
 export OUTPUT_LOC="$PWD/test-network-function"
 
+echo $PATH
+which helm
+helm list 
+
+
 usage() {
 	echo "$0 [-o OUTPUT_LOC] [-f SUITE...] -s [SUITE...] [-l LABEL...]"
 	echo "Call the script and list the test suites to run"

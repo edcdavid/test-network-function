@@ -47,6 +47,8 @@ ENV PATH=${PATH}:"/usr/local/go/bin":${GOPATH}/"bin"
 ARG TNF_VERSION
 ARG TNF_SRC_URL=$TNF_SRC_URL
 ARG GIT_CHECKOUT_TARGET=$TNF_VERSION
+RUN echo $TNF_SRC_URL
+RUN echo $TNF_VERSION
 
 # Git identifier to checkout for partner
 ARG TNF_PARTNER_VERSION
