@@ -134,6 +134,7 @@ var _ = ginkgo.Describe(common.NetworkingTestKey, func() {
 			env.LoadAndRefresh()
 			gomega.Expect(len(env.PodsUnderTest)).ToNot(gomega.Equal(0))
 			gomega.Expect(len(env.ContainersUnderTest)).ToNot(gomega.Equal(0))
+			log.Info("******** Sleeping 10s before starting tests *********")
 			time.Sleep(10 * time.Second)
 		})
 
