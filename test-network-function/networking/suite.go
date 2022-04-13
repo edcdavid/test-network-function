@@ -348,6 +348,9 @@ func testPing(initiatingPodNodeOc *interactive.Oc, sourceContainerID *configsect
 	gomega.Expect(env.NodesUnderTest[sourceContainerID.NodeName].DebugContainer.GetOc()).To(gomega.Not(gomega.BeNil()))
 	nodeOc := env.NodesUnderTest[sourceContainerID.NodeName].DebugContainer.GetOc()
 	containerPID := utils.GetContainerPID(sourceContainerID.NodeName, nodeOc, sourceContainerID.ContainerUID, sourceContainerID.ContainerRuntime)
+
+	log.Infof("Output of Arp command before: %s",utils.RunCommandInNode(sourceContainerID.NodeName,initiatingPodNodeOc,"arp -a", 10*time.Second))
+
 	pingTester := ping.NewPingNsenter(common.DefaultTimeout, containerPID, targetContainerIP.ip, count)
 	test, err := tnf.NewTest(initiatingPodNodeOc.GetExpecter(), pingTester, []reel.Handler{pingTester}, initiatingPodNodeOc.GetErrorChannel())
 	gomega.Expect(err).To(gomega.BeNil())
@@ -376,7 +379,7 @@ func testPing(initiatingPodNodeOc *interactive.Oc, sourceContainerID *configsect
 			env.NodesUnderTest[sourceContainerID.NodeName].DebugContainer.CloseOc()
 		}
 	})
-
+	log.Infof("Output of Arp command after: %s",utils.RunCommandInNode(sourceContainerID.NodeName,initiatingPodNodeOc,"arp -a", 10*time.Second))
 	return testResult
 }
 
